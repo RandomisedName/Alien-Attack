@@ -3,6 +3,14 @@ require('world')
 require('ui')
 
 function love.load()
+	gamestate = 'menu'
+	opSys = love.system.getOS()
+	
+	origW = love.graphics.getWidth()
+	origH = love.graphics.getHeight()
+	W = origW
+	H = origH
+	
 	world.load()
 	player.load()
 	ui.load()
@@ -14,7 +22,7 @@ function love.update(dt)
 	ui.update(dt)
 	
 	function love.keypressed(key)
-		
+		ui.keypressed(key)
 	end
 	
 	function love.mousepressed(x, y, mb)
