@@ -23,6 +23,7 @@ function love.update(dt)
 	
 	function love.keypressed(key)
 		ui.keypressed(key)
+		player.keypressed(key)
 	end
 	
 	function love.mousepressed(x, y, mb)

@@ -1,6 +1,7 @@
 ui = {}
 
 function ui.load()
+	--Сохраняем стандартный шрифт в переменную шрифта
 	ui.defaultFont = love.graphics.newFont(14)
 	
 	ui.info = true
