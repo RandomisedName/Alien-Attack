@@ -1,6 +1,7 @@
 require('player')
 require('world')
 require('ui')
+require('anal')
 
 function love.load()
 	gamestate = 'menu'
