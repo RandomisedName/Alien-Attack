@@ -32,7 +32,7 @@ function player.update(dt)
 	player.xVel = player.xVel * (1 - math.min(player.friction*dt, 1))
 	player.x = player.x + player.xVel*dt
 	player.screenX = player.screenX + player.xVel*dt
-	player.r = player.xVel/1000
+	player.r = player.xVel/2000
 	
 	player.beaming = love.keyboard.isDown('space')
 	
@@ -59,5 +59,5 @@ function player.draw()
 	
 	love.graphics.setColor(255, 255, 255)
 		--                 x          y         поворот    растижение по x, y     сдвиг x,y
-	player.anim:draw(math.floor(player.screenX), math.floor(player.y), player.r, 0.23, 0.23, player.h/2, 0) --отрисовка по х,y и поворот в радианах
+	player.anim:draw(math.floor(player.screenX), math.floor(player.y), player.r, 0.25, 0.25, player.w/2, player.h/2) --отрисовка по х,y и поворот в радианах
 end
