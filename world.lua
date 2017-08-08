@@ -1,4 +1,5 @@
 world = {}
+lexa = {}
 
 function world.load()
 	world.ground = {}
@@ -28,9 +29,25 @@ function world.load()
 	world.guy.add(love.math.random(0, W))
 	world.guy.add(love.math.random(0, W))
 	world.guy.add(love.math.random(0, W))
+	
+	world.alex = love.graphics.newImage("img/alex.png")
+	lexa.dm=love.graphics.newImage("img/alexdm.png")
+	lexa.death=love.graphics.newImage("img/mogila.png")
+	lexa.h = world.alex:getHeight() 
+	lexa.w = world.alex:getWidth() / 4
+	mogilaH = lexa.death:getHeight() 
+	mogilaW = lexa.death:getWidth() 
+	lexa.anim = newAnimation(world.alex,70,100,0.23,4) 
+	lexa.animdm = newAnimation(lexa.dm,70,100,1,1)
+	lexa.mogila = newAnimation(lexa.death,22,25,0,1)
+	lexa.anim:play()
+	lexa.animdm:play()
+	lexa.mogila:play()
 end
 
 function world.update(dt)
+	lexa.anim:update(dt)
+	lexa.animdm:update(dt)
 	-- Обработка человечков
 	for n = 1, world.guy.count, 1 do
 		--[[world.guy[n].timer = world.guy[n].timer - dt
@@ -60,7 +77,7 @@ function world.update(dt)
 		end
 		
 		-- Выполнение действия 1 (пытаться убежать)
-		if world.guy[n].action == 1 and world.guy[n].onGround then			
+		if world.guy[n].action == 1 and world.guy[n].onGround and world.guy[n].hp > 0 then			
 			if world.guy[n].x > player.x then
 				world.guy[n].xVel = world.guy[n].xVel + world.guy[n].speed*dt
 			else
@@ -83,10 +100,24 @@ function world.draw()
 		love.graphics.setColor(30, 200, 30)
 		love.graphics.line(0, world.ground.lvl, W, world.ground.lvl)
 		
-		love.graphics.setColor(255, 0, 0)
+		
 		for n = 1, world.guy.count, 1 do
+			love.graphics.setColor(255, 0, 0)
 			love.graphics.points(world.guy[n].x+player.screenX-player.x, world.guy[n].y)
 			love.graphics.print(n..'\n'..math.floor(world.guy[n].x)..'\n'..math.floor(world.guy[n].hp), world.guy[n].x+player.screenX-player.x, world.guy[n].y)
+			love.graphics.setColor(255, 255, 255)
+			
+			if 	world.guy[n].hp >  0 then 
+				if world.guy[n].onGround then 
+					lexa.anim:draw(math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 0.33, 0.33, lexa.w / 4, lexa.h )
+				else 
+					lexa.animdm:draw(math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 0.33, 0.33, lexa.w / 4, lexa.h )
+				end
+			else
+				lexa.mogila:draw(math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 1.25, 1.25, mogilaW / 2, mogilaH)
+			end
 		end
 	end
+	
+	
 end
