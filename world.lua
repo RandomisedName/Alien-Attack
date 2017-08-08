@@ -7,6 +7,7 @@ function world.load()
 	world.guy = {}
 	world.guy.count = 0
 	world.guy.friction = 1
+	world.guy.g = 40
 	
 	-- Функция создания человечка
 	function world.guy.add(x)
@@ -73,12 +74,15 @@ function world.update(dt)
 			world.guy[n].onGround = false
 			world.guy[n].yVel = -40
 		elseif not world.guy[n].onGround then
-			world.guy[n].yVel = world.guy[n].yVel + 20*dt
+			world.guy[n].yVel = world.guy[n].yVel + world.guy.g*dt
 		end
 	end
 end
 
 function world.draw()
+	love.graphics.setColor(114, 173, 255)
+	love.graphics.rectangle('fill', 0, 0, W, H)
+	
 	if ui.info then
 		love.graphics.setColor(30, 200, 30)
 		love.graphics.line(0, world.ground.lvl, W, world.ground.lvl)
