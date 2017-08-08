@@ -13,10 +13,10 @@ function player.load()
 end
 
 function player.update(dt)
-	if love.keyboard.isDown('a') and not love.keyboard.isDown('d') then	
+	if (love.keyboard.isDown('a') or love.keyboard.isDown("left")) and not (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then	
 		player.xVel = player.xVel - player.speed*dt
 	end
-	if love.keyboard.isDown('d') and not love.keyboard.isDown('a') then	
+	if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) and not (love.keyboard.isDown('a') or love.keyboard.isDown("left"))then	
 		player.xVel = player.xVel + player.speed*dt
 	end
 	
