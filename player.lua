@@ -10,6 +10,7 @@ function player.load()
 	player.friction = 0.2
 	player.r = 0
 	player.beaming = false
+	player.scrolling = false
 end
 
 function player.update(dt)
@@ -29,6 +30,7 @@ function player.update(dt)
 	player.beaming = love.keyboard.isDown('space')
 	
 	player.screenX = math.min(math.max(player.screenX, W*0.2), W*0.8)
+	player.scrolling = (player.screenX == W*0.2) or (player.screenX == W*0.8)
 	
 	function player.keypressed(key)
 		
