@@ -45,6 +45,10 @@ function player.update(dt)
 end
 
 function player.draw()
+	love.graphics.setColor(255, 255, 255)
+		--                 x          y         поворот    растижение по x, y     сдвиг x,y
+	player.anim:draw(math.floor(player.screenX), math.floor(player.y), player.r, 0.25, 0.25, player.w/2, player.h/2) --отрисовка по х,y и поворот в радианах
+	
 	if ui.info then
 		love.graphics.setColor(205, 208, 214)
 		love.graphics.setPointSize(4)
@@ -55,9 +59,4 @@ function player.draw()
 			love.graphics.line(player.screenX, player.y, player.screenX, H)
 		end
 	end
-	
-	
-	love.graphics.setColor(255, 255, 255)
-		--                 x          y         поворот    растижение по x, y     сдвиг x,y
-	player.anim:draw(math.floor(player.screenX), math.floor(player.y), player.r, 0.25, 0.25, player.w/2, player.h/2) --отрисовка по х,y и поворот в радианах
 end
