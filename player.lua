@@ -11,9 +11,16 @@ function player.load()
 	player.r = 0
 	player.beaming = false
 	player.scrolling = false
+	player.img=love.graphics.newImage("img/nlo.png")
+	player.h=player.img:getHeight()
+	player.ANIME=newAnimation(player.img,700,182,0.35,5)
+	player.ANIME:play()
 end
 
 function player.update(dt)
+	
+	player.ANIME:setSpeed()
+
 	if (love.keyboard.isDown('a') or love.keyboard.isDown("left")) and not (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then	
 		player.xVel = player.xVel - player.speed*dt
 	end
@@ -38,7 +45,7 @@ function player.update(dt)
 end
 
 function player.draw()
-	if ui.info then
+	--[[if ui.info then
 		love.graphics.setColor(205, 208, 214)
 		love.graphics.setPointSize(4)
 		love.graphics.points(player.screenX, player.y)
@@ -47,5 +54,10 @@ function player.draw()
 			love.graphics.setColor(158, 195, 255)
 			love.graphics.line(player.screenX, player.y, player.screenX, H)
 		end
-	end
+<<<<<<< HEAD
+	end]]--
+	
+
+		--                 x          y         поворот    растижение по x, y     сдвиг x,y
+	player.ANIME:draw(math.floor(player.screenX),math.floor(player.y),math.floor(player.screenX-15*math.cos(player.r)), 0, 0, 0, 0)--отрисовка по х,y и поворот в радианах
 end
