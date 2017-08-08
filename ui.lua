@@ -23,6 +23,6 @@ function ui.draw()
 	if ui.info then
 		love.graphics.setColor(0, 175, 255)
 		love.graphics.setFont(ui.defaultFont)
-		love.graphics.printf(love.timer.getFPS()..'\n'..math.floor(player.x)..'; '..math.floor(player.y), 10, 10, W-20, 'left')
+		love.graphics.printf(love.timer.getFPS()..'\n'..math.floor(player.x)..'; '..math.floor(player.y)..'\n'..love.mouse.getX()..'; '..love.mouse.getY(), 10, 10, W-20, 'left')
 	end
 end
