@@ -7,7 +7,7 @@ function world.load()
 	world.guy = {}
 	world.guy.count = 0
 	world.guy.friction = 1
-	world.guy.g = 40
+	world.guy.g = 80
 
 	-- Функция создания человечка
 	function world.guy.add(x)
@@ -32,9 +32,9 @@ function world.load()
 	world.guy.add(love.math.random(0, W))
 
 	world.lexa = {}
-	world.lexa.runSheet = love.graphics.newImage("img/alex.png")
-	world.lexa.idleSheet=love.graphics.newImage("img/alexdm.png")
-	world.lexa.dead=love.graphics.newImage("img/mogila.png")
+	world.lexa.runSheet = love.graphics.newImage("img/world/alex.png")
+	world.lexa.idleSheet=love.graphics.newImage("img/world/alexdm.png")
+	world.lexa.dead=love.graphics.newImage("img/world/mogila.png")
 	world.lexa.h = world.lexa.runSheet:getHeight()
 	world.lexa.w = world.lexa.runSheet:getWidth() / 4
 	world.lexa.mogilaH = world.lexa.dead:getHeight()
@@ -101,28 +101,28 @@ function world.draw()
 	love.graphics.setColor(114, 173, 255)
 	love.graphics.rectangle('fill', 0, 0, W, H)
 
+	love.graphics.setColor(255, 255, 255)
+
+	for n = 1, world.guy.count, 1 do
+		if 	world.guy[n].hp >  0 then
+			if world.guy[n].onGround then
+				world.lexa.run:draw(math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 0.33*world.guy[n].dir, 0.33, world.lexa.w / 4, world.lexa.h )
+			else
+				world.lexa.idle:draw(math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 0.33*world.guy[n].dir, 0.33, world.lexa.w / 4, world.lexa.h )
+			end
+		else
+			love.graphics.draw(world.lexa.dead, math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 1.25, 1.25, world.lexa.mogilaW / 2, world.lexa.mogilaH)
+		end
+	end
+
 	if ui.info then
 		love.graphics.setColor(30, 200, 30)
 		love.graphics.line(0, world.ground.lvl, W, world.ground.lvl)
-
 
 		for n = 1, world.guy.count, 1 do
 			love.graphics.setColor(255, 0, 0)
 			love.graphics.points(world.guy[n].x+player.screenX-player.x, world.guy[n].y)
 			love.graphics.print(n..'\n'..math.floor(world.guy[n].x)..'\n'..math.floor(world.guy[n].hp), world.guy[n].x+player.screenX-player.x, world.guy[n].y)
-			love.graphics.setColor(255, 255, 255)
-
-			if 	world.guy[n].hp >  0 then
-				if world.guy[n].onGround then
-					world.lexa.run:draw(math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 0.33*world.guy[n].dir, 0.33, world.lexa.w / 4, world.lexa.h )
-				else
-					world.lexa.idle:draw(math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 0.33*world.guy[n].dir, 0.33, world.lexa.w / 4, world.lexa.h )
-				end
-			else
-				love.graphics.draw(world.lexa.dead, math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 1.25, 1.25, world.lexa.mogilaW / 2, world.lexa.mogilaH)
-			end
 		end
 	end
-
-
 end
