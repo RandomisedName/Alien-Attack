@@ -26,10 +26,9 @@ function world.load()
 		--world.guy[world.guy.count].timer = 0
 	end
 
-	world.guy.add(love.math.random(0, W))
-	world.guy.add(love.math.random(0, W))
-	world.guy.add(love.math.random(0, W))
-	world.guy.add(love.math.random(0, W))
+	for n = 1, 10, 1 do
+		world.guy.add(love.math.random(-W, W*2))
+	end
 
 	world.lexa = {}
 	world.lexa.runSheet = love.graphics.newImage("img/world/alex.png")
@@ -71,7 +70,7 @@ function world.update(dt)
 		-- Проверка на столкновение с землей
 		if not world.guy[n].onGround and world.guy[n].y >= world.ground.lvl then
 			world.guy[n].onGround = true
-			world.guy[n].hp = world.guy[n].hp - world.guy[n].yVel
+			world.guy[n].hp = world.guy[n].hp - world.guy[n].yVel/3
 			world.guy[n].yVel = 0
 			world.guy[n].y = world.ground.lvl
 		end

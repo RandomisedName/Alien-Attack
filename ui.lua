@@ -3,8 +3,8 @@ ui = {}
 function ui.load()
 	--Сохраняем стандартный шрифт в переменную шрифта
 	ui.defaultFont = love.graphics.newFont(14)
-	
-	ui.info = true
+
+	ui.info = false
 end
 
 function ui.update(dt)
@@ -13,7 +13,7 @@ function ui.update(dt)
 			ui.info = not ui.info
 		end
 	end
-	
+
 	function ui.keypressed(key)
 		ui.func(key)
 	end
