@@ -25,7 +25,7 @@ function player.load()
 	player.control['right'] = {'d', 'right'}
 	player.control['up'] = {'w', 'up'}
 	player.control['down'] = {'s', 'down'}
-  
+
 	player.anim:play()
 end
 
@@ -44,7 +44,7 @@ function player.update(dt)
 			player.hMove = player.hMove + 1
 		end
 	end
-	if player.hMove > 1 then
+	if math.abs(player.hMove) > 1 then
 		player.hMove = 0
 	end
 
@@ -62,7 +62,7 @@ function player.update(dt)
 			player.vMove = player.vMove + 1
 		end
 	end
-	if player.vMove > 1 then
+	if  math.abs(player.vMove) > 1 then
 		player.vMove = 0
 	end
 
@@ -97,7 +97,7 @@ end
 
 function player.draw()
 	love.graphics.setColor(255, 255, 255)
-		--                 x          y         поворот    растижение по x, y     сдвиг x,y
+		--                 x          y         поворот    растяжение по x, y     сдвиг x,y
 	player.anim:draw(math.floor(player.screenX), math.floor(player.y), player.r, 0.25, 0.25, player.w/2, player.h/2) --отрисовка по х,y и поворот в радианах
 
 	if ui.info then
