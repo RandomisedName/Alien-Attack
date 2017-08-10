@@ -15,7 +15,7 @@ function player.load()
 	player.r = 0
 	player.beaming = false
 	player.scrolling = false
-	player.img = love.graphics.newImage("img/nlo.png")
+	player.img = love.graphics.newImage("img/ufo/ufo.png")
 	player.anim = newAnimation(player.img, 700, 182, 0.35, 5)
 	player.h = player.img:getHeight()
 	player.w = player.img:getWidth() / 5
@@ -25,7 +25,7 @@ function player.load()
 	player.control['right'] = {'d', 'right'}
 	player.control['up'] = {'w', 'up'}
 	player.control['down'] = {'s', 'down'}
-
+  
 	player.anim:play()
 end
 
