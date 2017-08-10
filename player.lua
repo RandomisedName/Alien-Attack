@@ -10,6 +10,8 @@ function player.load()
 	player.ySpeed = 400
 	player.xFriction = 0.2
 	player.yFriction = 3
+	player.hMove = 0
+	player.vMove = 0
 	player.r = 0
 	player.beaming = false
 	player.scrolling = false
@@ -31,20 +33,40 @@ function player.update(dt)
 	player.anim:update(dt)
 
 	-- Горизонтальное управление
-	if (love.keyboard.isDown('a') or love.keyboard.isDown("left")) and not (love.keyboard.isDown('d') or love.keyboard.isDown("right")) then
-		player.xVel = player.xVel - player.xSpeed*dt
+	player.hMove = 0
+	for i, key in ipairs(player.control['left']) do
+		if love.keyboard.isDown(key) then
+			player.hMove = player.hMove - 1
+		end
 	end
-	if (love.keyboard.isDown('d') or love.keyboard.isDown("right")) and not (love.keyboard.isDown('a') or love.keyboard.isDown("left"))then
-		player.xVel = player.xVel + player.xSpeed*dt
+	for i, key in ipairs(player.control['right']) do
+		if love.keyboard.isDown(key) then
+			player.hMove = player.hMove + 1
+		end
+	end
+	if player.hMove > 1 then
+		player.hMove = 0
 	end
 
+	player.xVel = player.xVel + player.xSpeed*player.hMove*dt
+
 	-- Вертикальное управление
-	if love.keyboard.isDown('w') and not love.keyboard.isDown('s') then
-		player.yVel = player.yVel - player.ySpeed*dt
+	player.vMove = 0
+	for i, key in ipairs(player.control['up']) do
+		if love.keyboard.isDown(key) then
+			player.vMove = player.vMove - 1
+		end
 	end
-	if love.keyboard.isDown('s') and not love.keyboard.isDown('w') then
-		player.yVel = player.yVel + player.ySpeed*dt
+	for i, key in ipairs(player.control['down']) do
+		if love.keyboard.isDown(key) then
+			player.vMove = player.vMove + 1
+		end
 	end
+	if player.vMove > 1 then
+		player.vMove = 0
+	end
+
+	player.yVel = player.yVel + player.ySpeed*player.vMove*dt
 
 	-- Трение
 	player.xVel = player.xVel * (1 - math.min(player.xFriction*dt, 1))
