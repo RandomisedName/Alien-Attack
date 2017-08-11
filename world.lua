@@ -1,8 +1,28 @@
 world = {}
 
 function world.load()
+	world.time = 0
+	world.dayLength = 60
+
 	world.ground = {}
 	world.ground.lvl = H-60 --Высота пола
+
+	world.bg = {}
+	world.bg.img = love.graphics.newImage("img/world/city.png")
+	world.bg.w = world.bg.img:getWidth()
+	world.bg.h = world.bg.img:getHeight()
+	world.bg.count = 5
+	world.bg.parallax = 3
+	for n = 0, world.bg.count, 1 do
+		world.bg[n] = {}
+		world.bg[n].x = world.bg.w*n
+	end
+
+	world.sky = {}
+	world.sky.sun = love.graphics.newImage('img/world/sun.png')
+	world.sky.sunH = world.sky.sun:getHeight()
+	world.sky.finalClr = {114, 173, 255}
+	world.sky.clr = {0, 0, 0}
 
 	world.guy = {}
 	world.guy.count = 0
@@ -47,6 +67,15 @@ end
 function world.update(dt)
 	world.lexa.run:update(dt)
 	world.lexa.idle:update(dt)
+
+	world.offset = player.screenX-player.x
+
+	world.time = math.min(world.time + dt, world.dayLength)
+
+	for n = 1, 3, 1 do
+		world.sky.clr[n] = world.time/world.dayLength*world.sky.finalClr[n]
+	end
+
 	-- Обработка человечков
 	for n = 1, world.guy.count, 1 do
 		--[[world.guy[n].timer = world.guy[n].timer - dt
@@ -94,14 +123,44 @@ function world.update(dt)
 			world.guy[n].yVel = world.guy[n].yVel + world.guy.g*dt
 		end
 	end
+
+	-- Движение фона
+	for n = 0, world.bg.count, 1 do
+		if world.bg[n].x+world.offset/world.bg.parallax > W then
+			if n < world.bg.count then
+				world.bg[n].x = world.bg[n+1].x - world.bg.w
+			else
+				world.bg[n].x = world.bg[0].x - world.bg.w
+			end
+		end
+
+		if world.bg[n].x+world.offset/world.bg.parallax+world.bg.w < 0 then
+			if n > 0 then
+				world.bg[n].x = world.bg[n-1].x + world.bg.w
+			else
+				world.bg[n].x = world.bg[world.bg.count].x + world.bg.w
+			end
+		end
+	end
 end
 
 function world.draw()
-	love.graphics.setColor(114, 173, 255)
+	love.graphics.setColor(world.sky.clr)
 	love.graphics.rectangle('fill', 0, 0, W, H)
 
 	love.graphics.setColor(255, 255, 255)
+	love.graphics.draw(world.sky.sun, 0, world.ground.lvl-world.time/world.dayLength*world.sky.sunH)
 
+	-- Фоновый ландшафт
+	love.graphics.setColor(255, 255, 255)
+	for n = 0, world.bg.count, 1 do
+		love.graphics.draw(world.bg.img, math.floor(world.bg[n].x+world.offset/world.bg.parallax), world.ground.lvl-world.bg.h-(player.y-H/2)/50)
+	end
+
+	love.graphics.setColor(163, 255, 135)
+	love.graphics.rectangle('fill', 0, world.ground.lvl, W, H-world.ground.lvl)
+
+	love.graphics.setColor(255, 255, 255)
 	for n = 1, world.guy.count, 1 do
 		if 	world.guy[n].hp >  0 then
 			if world.guy[n].onGround then

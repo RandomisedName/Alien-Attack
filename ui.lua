@@ -23,8 +23,10 @@ function ui.draw()
 	if ui.info then
 		love.graphics.setFont(ui.defaultFont)
 		love.graphics.setColor(0, 0, 0)
+		love.graphics.printf(math.floor(world.time)..'/'..world.dayLength, 1, 11, W, 'center')
 		love.graphics.printf(love.timer.getFPS()..'\n'..math.floor(player.x)..'; '..math.floor(player.y)..' ('..math.floor(player.screenX)..')'..'\n'..love.mouse.getX()..'; '..love.mouse.getY(), 11, 11, W-20, 'left')
 		love.graphics.setColor(255, 255, 255)
+		love.graphics.printf(math.floor(world.time)..'/'..world.dayLength, 0, 10, W, 'center')
 		love.graphics.printf(love.timer.getFPS()..'\n'..math.floor(player.x)..'; '..math.floor(player.y)..' ('..math.floor(player.screenX)..')'..'\n'..love.mouse.getX()..'; '..love.mouse.getY(), 10, 10, W-20, 'left')
 	end
 end
