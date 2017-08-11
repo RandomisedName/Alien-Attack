@@ -1,6 +1,9 @@
 world = {}
 
 function world.load()
+	world.time = 0
+	world.dayLength = 60
+
 	world.ground = {}
 	world.ground.lvl = H-60 --Высота пола
 
@@ -14,6 +17,12 @@ function world.load()
 		world.bg[n] = {}
 		world.bg[n].x = world.bg.w*n
 	end
+
+	world.sky = {}
+	world.sky.sun = love.graphics.newImage('img/world/sun.png')
+	world.sky.sunH = world.sky.sun:getHeight()
+	world.sky.finalClr = {114, 173, 255}
+	world.sky.clr = {0, 0, 0}
 
 	world.guy = {}
 	world.guy.count = 0
@@ -60,6 +69,12 @@ function world.update(dt)
 	world.lexa.idle:update(dt)
 
 	world.offset = player.screenX-player.x
+
+	world.time = math.min(world.time + dt, world.dayLength)
+
+	for n = 1, 3, 1 do
+		world.sky.clr[n] = world.time/world.dayLength*world.sky.finalClr[n]
+	end
 
 	-- Обработка человечков
 	for n = 1, world.guy.count, 1 do
@@ -130,8 +145,11 @@ function world.update(dt)
 end
 
 function world.draw()
-	love.graphics.setColor(114, 173, 255)
+	love.graphics.setColor(world.sky.clr)
 	love.graphics.rectangle('fill', 0, 0, W, H)
+
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.draw(world.sky.sun, 0, world.ground.lvl-world.time/world.dayLength*world.sky.sunH)
 
 	-- Фоновый ландшафт
 	love.graphics.setColor(255, 255, 255)

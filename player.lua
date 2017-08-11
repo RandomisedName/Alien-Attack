@@ -25,7 +25,7 @@ function player.load()
 	player.control['right'] = {'d', 'right'}
 	player.control['up'] = {'w', 'up'}
 	player.control['down'] = {'s', 'down'}
-  
+
 	player.anim:play()
 end
 
@@ -78,8 +78,8 @@ function player.update(dt)
 	player.r = player.xVel/2000
 
 	-- Вертикальное ограничение
-	if player.y < 0 then
-		player.yVel = player.yVel - player.y*100*dt
+	if player.y < player.h/4 then
+		player.yVel = player.yVel - (player.y-player.h/4)*100*dt
 	end
 	if player.y > H/2 then
 		player.yVel = player.yVel - (player.y-H/2)*100*dt
