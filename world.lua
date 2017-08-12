@@ -9,13 +9,22 @@ function world.load()
 
 	world.bg = {}
 	world.bg.img = love.graphics.newImage("img/world/city.png")
+	world.bg.imgMask = love.graphics.newImage("img/world/citymask.png")
 	world.bg.w = world.bg.img:getWidth()
 	world.bg.h = world.bg.img:getHeight()
 	world.bg.count = 5
 	world.bg.parallax = 3
+	world.bg.lightCount = 1000
 	for n = 0, world.bg.count, 1 do
 		world.bg[n] = {}
 		world.bg[n].x = world.bg.w*n
+		world.bg[n].light = {}
+		for m = 0, world.bg.lightCount, 1 do
+			world.bg[n].light[m] = {}
+			world.bg[n].light[m].x = love.math.random(0, world.bg.w)
+			world.bg[n].light[m].y = love.math.random(2, world.bg.h-2)
+			world.bg[n].light[m].time = love.math.random(10, world.dayLength/4*10)/10 --Эмперический знаменатель! (4)
+		end
 	end
 
 	world.sky = {}
@@ -148,13 +157,26 @@ function world.draw()
 	love.graphics.setColor(world.sky.clr)
 	love.graphics.rectangle('fill', 0, 0, W, H)
 
+	-- Солнце
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.draw(world.sky.sun, 0, world.ground.lvl-world.time/world.dayLength*world.sky.sunH*0.7)
 
 	-- Фоновый ландшафт
-	love.graphics.setColor(255, 255, 255)
 	for n = 0, world.bg.count, 1 do
-		love.graphics.draw(world.bg.img, math.floor(world.bg[n].x+world.offset/world.bg.parallax), world.ground.lvl-world.bg.h-(player.y-H/2)/50)
+		love.graphics.setColor(255, 255, 255)
+		love.graphics.draw(world.bg.img, math.floor(world.bg[n].x+world.offset/world.bg.parallax), math.floor(world.ground.lvl-world.bg.h-(player.y-H/2)/50+1)) -- "+1" Нужно, поскольку тарелка проваливается вниз за границу
+
+		-- Окошки
+		if world.time < world.dayLength/4 then --Эмперический знаменатель! (4)
+			love.graphics.setPointSize(1)
+			for m = 1, world.bg.lightCount, 1 do
+				if world.time < world.bg[n].light[m].time then
+					love.graphics.points(math.floor(world.bg[n].x+world.offset/world.bg.parallax+world.bg[n].light[m].x), world.ground.lvl-world.bg.h-(player.y-H/2)/50+world.bg[n].light[m].y)
+				end
+			end
+			love.graphics.setColor(world.sky.clr)
+			love.graphics.draw(world.bg.imgMask, math.floor(world.bg[n].x+world.offset/world.bg.parallax), math.floor(world.ground.lvl-world.bg.h-(player.y-H/2)/50+1)) -- "+1" Нужно, поскольку тарелка проваливается вниз за границу
+		end
 	end
 
 	love.graphics.setColor(163, 255, 135)
