@@ -31,76 +31,78 @@ function player.load()
 end
 
 function player.update(dt)
-	player.anim:update(dt)
+	if gamestate == 'playing' then
+		player.anim:update(dt)
 
-	-- Горизонтальное управление
-	player.hMove = 0
-	for i, key in ipairs(player.control['left']) do
-		if love.keyboard.isDown(key) then
-			player.hMove = player.hMove - 1
-		end
-	end
-	for i, key in ipairs(player.control['right']) do
-		if love.keyboard.isDown(key) then
-			player.hMove = player.hMove + 1
-		end
-	end
-	if math.abs(player.hMove) > 1 then
+		-- Горизонтальное управление
 		player.hMove = 0
-	end
-
-	player.xVel = player.xVel + player.xSpeed*player.hMove*dt
-
-	-- Вертикальное управление
-	player.vMove = 0
-	for i, key in ipairs(player.control['up']) do
-		if love.keyboard.isDown(key) then
-			player.vMove = player.vMove - 1
+		for i, key in ipairs(player.control['left']) do
+			if love.keyboard.isDown(key) then
+				player.hMove = player.hMove - 1
+			end
 		end
-	end
-	for i, key in ipairs(player.control['down']) do
-		if love.keyboard.isDown(key) then
-			player.vMove = player.vMove + 1
+		for i, key in ipairs(player.control['right']) do
+			if love.keyboard.isDown(key) then
+				player.hMove = player.hMove + 1
+			end
 		end
-	end
-	if  math.abs(player.vMove) > 1 then
+		if math.abs(player.hMove) > 1 then
+			player.hMove = 0
+		end
+
+		player.xVel = player.xVel + player.xSpeed*player.hMove*dt
+
+		-- Вертикальное управление
 		player.vMove = 0
-	end
+		for i, key in ipairs(player.control['up']) do
+			if love.keyboard.isDown(key) then
+				player.vMove = player.vMove - 1
+			end
+		end
+		for i, key in ipairs(player.control['down']) do
+			if love.keyboard.isDown(key) then
+				player.vMove = player.vMove + 1
+			end
+		end
+		if  math.abs(player.vMove) > 1 then
+			player.vMove = 0
+		end
 
-	player.yVel = player.yVel + player.ySpeed*player.vMove*dt
+		player.yVel = player.yVel + player.ySpeed*player.vMove*dt
 
-	-- Трение
-	player.xVel = player.xVel * (1 - math.min(player.xFriction*dt, 1))
-	player.yVel = player.yVel * (1 - math.min(player.yFriction*dt, 1))
-	player.yVel = math.min(player.yVel, 100)
-	player.x = player.x + player.xVel*dt
-	player.y = player.y + player.yVel*dt
-	player.screenX = player.screenX + player.xVel*dt
-	player.r = player.xVel/2000
+		-- Трение
+		player.xVel = player.xVel * (1 - math.min(player.xFriction*dt, 1))
+		player.yVel = player.yVel * (1 - math.min(player.yFriction*dt, 1))
+		player.yVel = math.min(player.yVel, 100)
+		player.x = player.x + player.xVel*dt
+		player.y = player.y + player.yVel*dt
+		player.screenX = player.screenX + player.xVel*dt
+		player.r = player.xVel/2000
 
-	-- Вертикальное ограничение
-	if player.y < player.h/4 then
-		player.yVel = player.yVel - (player.y-player.h/4)*100*dt
-	end
-	if player.y > H/2 then
-		player.yVel = player.yVel - (player.y-H/2)*100*dt
-	end
+		-- Вертикальное ограничение
+		if player.y < player.h/4 then
+			player.yVel = player.yVel - (player.y-player.h/4)*100*dt
+		end
+		if player.y > H/2 then
+			player.yVel = player.yVel - (player.y-H/2)*100*dt
+		end
 
-	for i, key in ipairs(player.control['beam']) do
-		player.beaming = love.keyboard.isDown(key)
-	end
+		for i, key in ipairs(player.control['beam']) do
+			player.beaming = love.keyboard.isDown(key)
+		end
 
-	player.screenX = math.min(math.max(player.screenX, W*0.2), W*0.8)
-	player.scrolling = (player.screenX == W*0.2) or (player.screenX == W*0.8)
+		player.screenX = math.min(math.max(player.screenX, W*0.2), W*0.8)
+		player.scrolling = (player.screenX == W*0.2) or (player.screenX == W*0.8)
 
-	function player.keypressed(key)
+		function player.keypressed(key)
 
+		end
 	end
 end
 
 function player.draw()
 	love.graphics.setColor(255, 255, 255)
-		--                 x          y         поворот    растяжение по x, y     сдвиг x,y
+	-- x	y	поворот	растяжение по x,y	сдвиг x,y
 	player.anim:draw(math.floor(player.screenX), math.floor(player.y), player.r, 0.25, 0.25, player.w/2, player.h/2) --отрисовка по х,y и поворот в радианах
 
 	if ui.info then
