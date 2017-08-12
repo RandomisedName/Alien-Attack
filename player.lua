@@ -25,6 +25,7 @@ function player.load()
 	player.control['right'] = {'d', 'right'}
 	player.control['up'] = {'w', 'up'}
 	player.control['down'] = {'s', 'down'}
+	player.control['beam'] = {'space'}
 
 	player.anim:play()
 end
@@ -85,7 +86,9 @@ function player.update(dt)
 		player.yVel = player.yVel - (player.y-H/2)*100*dt
 	end
 
-	player.beaming = love.keyboard.isDown('space')
+	for i, key in ipairs(player.control['beam']) do
+		player.beaming = love.keyboard.isDown(key)
+	end
 
 	player.screenX = math.min(math.max(player.screenX, W*0.2), W*0.8)
 	player.scrolling = (player.screenX == W*0.2) or (player.screenX == W*0.8)
