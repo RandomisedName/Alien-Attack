@@ -56,9 +56,9 @@ function world.load()
 		world.guy[world.guy.count].dir = 1
 		world.guy[world.guy.count].onGround = true
 		world.guy[world.guy.count].speed = love.math.random(50, 70)
-		world.guy[world.guy.count].strength = love.math.random(350, 450)
+		world.guy[world.guy.count].strength = love.math.random(300, 400)
 		world.guy[world.guy.count].hp = 100
-		world.guy[world.guy.count].action = love.math.random(1, 2) --Действие 0 - атака, Действие 1 - бездействие, Действие 2 - бежать
+		world.guy[world.guy.count].action = 2 --Действие 0 - атака, Действие 1 - бездействие, Действие 2 - бежать
 		world.guy[world.guy.count].timer = 0
 
 		world.guy[world.guy.count].runAnim = newAnimation(world.guy.runSheet, 23, 33, 0.23, 4)

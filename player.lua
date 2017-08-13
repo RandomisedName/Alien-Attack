@@ -94,7 +94,7 @@ function player.update(dt)
 		end
 
 		for n = 1, world.ammo.count, 1 do
-			if not world.ammo[n].collided and math.abs(player.x-world.ammo[n].x) < player.w/8 and math.abs(player.y-world.ammo[n].y) < player.h/8 then
+			if not world.ammo[n].collided and math.abs(player.x-world.ammo[n].x) < player.w/2 and math.abs(player.y-world.ammo[n].y) < player.h/2 then
 				world.ammo[n].collided = true
 				world.ammo[n].owner = nil
 				player.hp = player.hp - 1
@@ -121,6 +121,7 @@ function player.draw()
 	if ui.info > 1 then
 		love.graphics.setColor(205, 208, 214)
 		love.graphics.setPointSize(4)
+		love.graphics.setLineWidth(2)
 		love.graphics.points(player.screenX, player.y)
 		love.graphics.line(player.screenX-15*math.cos(player.r), player.y-15*math.sin(player.r), player.screenX+15*math.cos(player.r), player.y+15*math.sin(player.r))
 		love.graphics.setColor(255, 0, 0)
