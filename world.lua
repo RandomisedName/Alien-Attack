@@ -21,8 +21,8 @@ function world.load()
 		world.bg[n].light = {}
 		for m = 0, world.bg.lightCount, 1 do
 			world.bg[n].light[m] = {}
-			world.bg[n].light[m].x = love.math.random(0, world.bg.w)
-			world.bg[n].light[m].y = love.math.random(2, world.bg.h-2)
+			world.bg[n].light[m].x = love.math.random(2, world.bg.w-2)
+			world.bg[n].light[m].y = love.math.random(2, world.bg.h-5)
 			world.bg[n].light[m].time = love.math.random(10, world.dayLength/4*10)/10 --Эмперический знаменатель! (4)
 		end
 	end
@@ -169,12 +169,14 @@ function world.draw()
 
 		-- Окошки
 		if world.time < world.dayLength/4 then --Эмперический знаменатель! (4)
-			love.graphics.setPointSize(1)
+			love.graphics.setColor(255, 249, 186)
+			love.graphics.setPointSize(2)
 			for m = 1, world.bg.lightCount, 1 do
 				if world.time < world.bg[n].light[m].time then
 					love.graphics.points(math.floor(world.bg[n].x+world.offset/world.bg.parallax+world.bg[n].light[m].x), world.ground.lvl-world.bg.h-(player.y-H/2)/50+world.bg[n].light[m].y)
 				end
 			end
+
 			love.graphics.setColor(world.sky.clr)
 			love.graphics.draw(world.bg.imgMask, math.floor(world.bg[n].x+world.offset/world.bg.parallax), math.floor(world.ground.lvl-world.bg.h-(player.y-H/2)/50+1)) -- "+1" Нужно, поскольку тарелка проваливается вниз за границу
 		end
@@ -196,7 +198,7 @@ function world.draw()
 		end
 	end
 
-	if ui.info then
+	if ui.info > 1 then
 		love.graphics.setColor(30, 200, 30)
 		love.graphics.line(0, world.ground.lvl, W, world.ground.lvl)
 

@@ -105,7 +105,7 @@ function player.draw()
 	-- x	y	поворот	растяжение по x,y	сдвиг x,y
 	player.anim:draw(math.floor(player.screenX), math.floor(player.y), player.r, 0.25, 0.25, player.w/2, player.h/2) --отрисовка по х,y и поворот в радианах
 
-	if ui.info then
+	if ui.info > 1 then
 		love.graphics.setColor(205, 208, 214)
 		love.graphics.setPointSize(4)
 		love.graphics.points(player.screenX, player.y)
