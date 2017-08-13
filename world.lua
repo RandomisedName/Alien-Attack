@@ -60,7 +60,7 @@ function world.load()
 		world.guy[world.guy.count].action = 1 --Действие 0 - стоять, Действие 2 - бежать
 		--world.guy[world.guy.count].timer = 0
 
-		world.guy[world.guy.count].runAnim = newAnimation(world.guy.runSheet,70,100,0.23,4)
+		world.guy[world.guy.count].runAnim = newAnimation(world.guy.runSheet, 23, 33, 0.23, 4)
 
 		world.guy[world.guy.count].runAnim:play()
 	end
@@ -188,12 +188,12 @@ function world.draw()
 	for n = 1, world.guy.count, 1 do
 		if 	world.guy[n].hp >  0 then
 			if world.guy[n].onGround then
-				world.guy[n].runAnim:draw(math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 0.33*world.guy[n].dir, 0.33, world.guy.w/4, world.guy.h)
+				world.guy[n].runAnim:draw(math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/4, world.guy.h)
 			else
-				love.graphics.draw(world.guy.idleImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 0.33*world.guy[n].dir, 0.33, world.guy.w/4, world.guy.h)
+				love.graphics.draw(world.guy.idleImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/4, world.guy.h)
 			end
 		else
-			love.graphics.draw(world.guy.deadImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1.25, 1.25, world.guy.deadW/2, world.guy.deadH)
+			love.graphics.draw(world.guy.deadImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1, 1, world.guy.deadW/2, world.guy.deadH)
 		end
 	end
 
