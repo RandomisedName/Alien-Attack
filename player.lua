@@ -19,6 +19,7 @@ function player.load()
 	player.anim = newAnimation(player.img, 700, 182, 0.35, 5)
 	player.h = player.img:getHeight()
 	player.w = player.img:getWidth() / 5
+	player.hp = 100
 
 	player.control = {}
 	player.control['left'] = {'a', 'left'}
@@ -89,6 +90,17 @@ function player.update(dt)
 
 		for i, key in ipairs(player.control['beam']) do
 			player.beaming = love.keyboard.isDown(key)
+		end
+
+		for n = 1, world.ammo.count, 1 do
+			if not world.ammo[n].collided and math.abs(player.x-world.ammo[n].x) < player.w/8 and math.abs(player.y-world.ammo[n].y) < player.h/8 then
+				world.ammo[n].collided = true
+				world.ammo[n].owner = nil
+				player.hp = player.hp - 1
+
+				world.ammo[n].xVel = -world.ammo[n].xVel*0.1
+				world.ammo[n].yVel = -world.ammo[n].yVel*0.1
+			end
 		end
 
 		player.screenX = math.min(math.max(player.screenX, W*0.2), W*0.8)
