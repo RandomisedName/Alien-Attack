@@ -13,7 +13,7 @@ function world.load()
 	world.bg.w = world.bg.img:getWidth()
 	world.bg.h = world.bg.img:getHeight()
 	world.bg.count = 5
-	world.bg.parallax = 3
+	world.bg.parallax = 3 -- Фактор параллакса
 	world.bg.lightCount = 1000
 	for n = 0, world.bg.count, 1 do
 		world.bg[n] = {}
@@ -27,11 +27,10 @@ function world.load()
 		end
 	end
 
-	world.sky = {}
-	world.sky.sun = love.graphics.newImage('img/world/sun.png')
-	world.sky.sunH = world.sky.sun:getHeight()
-	world.sky.finalClr = {114, 173, 255}
-	world.sky.clr = {0, 0, 0}
+	world.bg.sun = love.graphics.newImage('img/world/sun.png')
+	world.bg.sunH = world.bg.sun:getHeight()
+	world.bg.finalClr = {114, 173, 255}
+	world.bg.clr = {0, 0, 0}
 
 	world.guy = {}
 	world.guy.count = 0
@@ -61,7 +60,7 @@ function world.load()
 		world.guy[world.guy.count].action = 1 --Действие 0 - стоять, Действие 2 - бежать
 		--world.guy[world.guy.count].timer = 0
 
-		world.guy[world.guy.count].runAnim = newAnimation(world.guy.runSheet,70,100,0.23,4)
+		world.guy[world.guy.count].runAnim = newAnimation(world.guy.runSheet, 23, 33, 0.23, 4)
 
 		world.guy[world.guy.count].runAnim:play()
 	end
@@ -78,7 +77,7 @@ function world.update(dt)
 		world.time = math.min(world.time + dt, world.dayLength)
 
 		for n = 1, 3, 1 do
-			world.sky.clr[n] = world.time/world.dayLength*world.sky.finalClr[n]
+			world.bg.clr[n] = world.time/world.dayLength*world.bg.finalClr[n]
 		end
 
 		-- Обработка человечков
@@ -155,17 +154,17 @@ function world.update(dt)
 end
 
 function world.draw()
-	love.graphics.setColor(world.sky.clr)
+	love.graphics.setColor(world.bg.clr)
 	love.graphics.rectangle('fill', 0, 0, W, H)
 
 	-- Солнце
 	love.graphics.setColor(255, 255, 255)
-	love.graphics.draw(world.sky.sun, 0, world.ground.lvl-world.time/world.dayLength*world.sky.sunH*0.7)
+	love.graphics.draw(world.bg.sun, 0, world.ground.lvl-world.time/world.dayLength*world.bg.sunH*0.7)
 
 	-- Фоновый ландшафт
 	for n = 0, world.bg.count, 1 do
 		love.graphics.setColor(255, 255, 255)
-		love.graphics.draw(world.bg.img, math.floor(world.bg[n].x+world.offset/world.bg.parallax), math.floor(world.ground.lvl-world.bg.h-(player.y-H/2)/50+1)) -- "+1" Нужно, поскольку тарелка проваливается вниз за границу
+		love.graphics.draw(world.bg.img, math.floor(world.bg[n].x+world.offset/world.bg.parallax), math.floor(world.ground.lvl-world.bg.h-(player.y-H*0.6)/50+1)) -- "+1" Нужно, поскольку тарелка проваливается вниз за границу
 
 		-- Окошки
 		if world.time < world.dayLength/4 then --Эмперический знаменатель! (4)
@@ -173,12 +172,12 @@ function world.draw()
 			love.graphics.setPointSize(2)
 			for m = 1, world.bg.lightCount, 1 do
 				if world.time < world.bg[n].light[m].time then
-					love.graphics.points(math.floor(world.bg[n].x+world.offset/world.bg.parallax+world.bg[n].light[m].x), world.ground.lvl-world.bg.h-(player.y-H/2)/50+world.bg[n].light[m].y)
+					love.graphics.points(math.floor(world.bg[n].x+world.offset/world.bg.parallax+world.bg[n].light[m].x), world.ground.lvl-world.bg.h-(player.y-H*0.6)/50+world.bg[n].light[m].y)
 				end
 			end
 
-			love.graphics.setColor(world.sky.clr)
-			love.graphics.draw(world.bg.imgMask, math.floor(world.bg[n].x+world.offset/world.bg.parallax), math.floor(world.ground.lvl-world.bg.h-(player.y-H/2)/50+1)) -- "+1" Нужно, поскольку тарелка проваливается вниз за границу
+			love.graphics.setColor(world.bg.clr)
+			love.graphics.draw(world.bg.imgMask, math.floor(world.bg[n].x+world.offset/world.bg.parallax), math.floor(world.ground.lvl-world.bg.h-(player.y-H*0.6)/50+1)) -- "+1" Нужно, поскольку тарелка проваливается вниз за границу
 		end
 	end
 
@@ -189,12 +188,12 @@ function world.draw()
 	for n = 1, world.guy.count, 1 do
 		if 	world.guy[n].hp >  0 then
 			if world.guy[n].onGround then
-				world.guy[n].runAnim:draw(math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 0.33*world.guy[n].dir, 0.33, world.guy.w/4, world.guy.h )
+				world.guy[n].runAnim:draw(math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/4, world.guy.h)
 			else
-				love.graphics.draw(world.guy.idleImg, math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 0.33*world.guy[n].dir, 0.33, world.guy.w/4, world.guy.h )
+				love.graphics.draw(world.guy.idleImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/4, world.guy.h)
 			end
 		else
-			love.graphics.draw(world.guy.deadImg, math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 1.25, 1.25, world.guy.deadW/2, world.guy.deadH)
+			love.graphics.draw(world.guy.deadImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1, 1, world.guy.deadW/2, world.guy.deadH)
 		end
 	end
 
@@ -204,8 +203,8 @@ function world.draw()
 
 		for n = 1, world.guy.count, 1 do
 			love.graphics.setColor(255, 0, 0)
-			love.graphics.points(world.guy[n].x+player.screenX-player.x, world.guy[n].y)
-			love.graphics.print(n..'\n'..math.floor(world.guy[n].x)..'\n'..math.floor(world.guy[n].hp), world.guy[n].x+player.screenX-player.x, world.guy[n].y)
+			love.graphics.points(world.guy[n].x+world.offset, world.guy[n].y)
+			love.graphics.print(n..'\n'..math.floor(world.guy[n].x)..'\n'..math.floor(world.guy[n].hp), world.guy[n].x+world.offset, world.guy[n].y)
 		end
 	end
 end

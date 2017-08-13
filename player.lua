@@ -16,7 +16,7 @@ function player.load()
 	player.beaming = false
 	player.scrolling = false
 	player.img = love.graphics.newImage("img/ufo/ufo.png")
-	player.anim = newAnimation(player.img, 700, 182, 0.35, 5)
+	player.anim = newAnimation(player.img, 175, 46, 0.35, 5)
 	player.h = player.img:getHeight()
 	player.w = player.img:getWidth() / 5
 
@@ -83,10 +83,11 @@ function player.update(dt)
 		if player.y < player.h/4 then
 			player.yVel = player.yVel - (player.y-player.h/4)*100*dt
 		end
-		if player.y > H/2 then
-			player.yVel = player.yVel - (player.y-H/2)*100*dt
+		if player.y > H*0.6 then
+			player.yVel = player.yVel - (player.y-H*0.6)*100*dt
 		end
 
+		-- Управление лучом
 		for i, key in ipairs(player.control['beam']) do
 			player.beaming = love.keyboard.isDown(key)
 		end
@@ -103,7 +104,7 @@ end
 function player.draw()
 	love.graphics.setColor(255, 255, 255)
 	-- x	y	поворот	растяжение по x,y	сдвиг x,y
-	player.anim:draw(math.floor(player.screenX), math.floor(player.y), player.r, 0.25, 0.25, player.w/2, player.h/2) --отрисовка по х,y и поворот в радианах
+	player.anim:draw(math.floor(player.screenX), math.floor(player.y), player.r, 1, 1, player.w/2, player.h/2) --отрисовка по х,y и поворот в радианах
 
 	if ui.info > 1 then
 		love.graphics.setColor(205, 208, 214)
