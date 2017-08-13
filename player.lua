@@ -83,10 +83,11 @@ function player.update(dt)
 		if player.y < player.h/4 then
 			player.yVel = player.yVel - (player.y-player.h/4)*100*dt
 		end
-		if player.y > H/2 then
-			player.yVel = player.yVel - (player.y-H/2)*100*dt
+		if player.y > H*0.6 then
+			player.yVel = player.yVel - (player.y-H*0.6)*100*dt
 		end
 
+		-- Управление лучом
 		for i, key in ipairs(player.control['beam']) do
 			player.beaming = love.keyboard.isDown(key)
 		end
