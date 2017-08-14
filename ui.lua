@@ -32,6 +32,7 @@ function ui.update(dt)
 	ui.addInfo(gamestate)
 	ui.addInfo(math.floor(player.x)..'; '..math.floor(player.y)..' ('..math.floor(player.screenX)..')')
 	ui.addInfo(love.mouse.getX()..'; '..love.mouse.getY())
+	ui.addInfo(player.beamCharge)
 
 	ui.addInfo(math.floor(world.time)..'/'..world.dayLength, 'center')
 
@@ -39,6 +40,13 @@ function ui.update(dt)
 	ui.addInfo('spawn guy - f2', 'right')
 	ui.addInfo('pause - f10', 'right')
 	ui.addInfo('relaunch - f12', 'right')
+
+	function ui.splash(key)
+		if key == 'space' or key == 'return' or key == 'escape' then
+			splashy.skipSplash()
+			gamestate = 'playing'
+		end
+	end
 
 	function ui.func(key)
 		if key == 'f1' then
@@ -63,11 +71,15 @@ function ui.update(dt)
 	end
 
 	function ui.keypressed(key)
+		ui.splash(key)
 		ui.func(key)
 	end
 end
 
 function ui.draw()
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.rectangle('fill', 0, 0, W*player.beamCharge/100, 2)
+
 	if ui.info > 0 then
 		love.graphics.setFont(ui.defaultFont)
 		for n = 0, 1, 1 do
