@@ -4,12 +4,16 @@ function world.load()
 	world.time = 0
 	world.dayLength = 60
 
+	world.offset = 0
+
 	world.ground = {}
 	world.ground.lvl = H-60 --Высота пола
 
 	world.bg = {}
 	world.bg.img = love.graphics.newImage("img/world/city.png")
 	world.bg.imgMask = love.graphics.newImage("img/world/citymask.png")
+	world.bg.imgGlow = love.graphics.newImage("img/world/cityglow.png")
+	world.bg.imgGlowH = world.bg.imgGlow:getHeight()
 	world.bg.w = world.bg.img:getWidth()
 	world.bg.h = world.bg.img:getHeight()
 	world.bg.count = 5
@@ -264,6 +268,8 @@ function world.draw()
 			love.graphics.draw(world.bg.imgMask, math.floor(world.bg[n].x+world.offset/world.bg.parallax), math.floor(world.ground.lvl-world.bg.h-(player.y-H*0.6)/50+1)) -- "+1" Нужно, поскольку тарелка проваливается вниз за границу
 		end
 	end
+	love.graphics.setColor(255, 249, 186, math.max(255-255*world.time/world.dayLength*4, 0))
+	love.graphics.draw(world.bg.imgGlow, 0, math.floor(world.ground.lvl-world.bg.imgGlowH-(player.y-H*0.6)/50+1))
 
 	love.graphics.setColor(163, 255, 135)
 	love.graphics.rectangle('fill', 0, world.ground.lvl, W, H-world.ground.lvl)

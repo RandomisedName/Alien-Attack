@@ -40,6 +40,13 @@ function ui.update(dt)
 	ui.addInfo('pause - f10', 'right')
 	ui.addInfo('relaunch - f12', 'right')
 
+	function ui.splash(key)
+		if key == 'space' or key == 'return' or key == 'escape' then
+			splashy.skipSplash()
+			gamestate = 'playing'
+		end
+	end
+
 	function ui.func(key)
 		if key == 'f1' then
 			ui.info = ui.info + 1
@@ -63,6 +70,7 @@ function ui.update(dt)
 	end
 
 	function ui.keypressed(key)
+		ui.splash(key)
 		ui.func(key)
 	end
 end

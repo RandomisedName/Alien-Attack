@@ -106,10 +106,10 @@ function player.update(dt)
 
 		player.screenX = math.min(math.max(player.screenX, W*0.2), W*0.8)
 		player.scrolling = (player.screenX == W*0.2) or (player.screenX == W*0.8)
+	end
 
-		function player.keypressed(key)
+	function player.keypressed(key)
 
-		end
 	end
 end
 
