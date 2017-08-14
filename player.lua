@@ -14,6 +14,8 @@ function player.load()
 	player.vMove = 0
 	player.r = 0
 	player.beaming = false
+	player.beamCharge = 100
+	player.beamOff = false
 	player.scrolling = false
 	player.img = love.graphics.newImage("img/ufo/ufo.png")
 	player.anim = newAnimation(player.img, 175, 46, 0.35, 5)
@@ -90,7 +92,17 @@ function player.update(dt)
 
 		-- Управление лучом
 		for i, key in ipairs(player.control['beam']) do
-			player.beaming = love.keyboard.isDown(key)
+			player.beaming = love.keyboard.isDown(key) and not player.beamOff
+		end
+		player.beamOff = player.beamCharge < 0
+		if player.beaming then
+			player.beamCharge = math.max(player.beamCharge - dt*20, -20)
+			player.beamOff = player.beamCharge == -20
+			if player.beamCharge <= 0 then
+				player.beaming = false
+			end
+		else
+			player.beamCharge = math.min(player.beamCharge + dt*20, 100)
 		end
 
 		for n = 1, world.ammo.count, 1 do
