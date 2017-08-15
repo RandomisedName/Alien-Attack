@@ -24,27 +24,37 @@ function ui.load()
 end
 
 function ui.update(dt)
-	ui.infoStr['left'] = ''
-	ui.infoStr['center'] = ''
-	ui.infoStr['right'] = ''
-	-- В инфо окно добавлять тут
-	ui.addInfo(love.timer.getFPS())
-	ui.addInfo(gamestate)
-	ui.addInfo(math.floor(player.x)..'; '..math.floor(player.y)..' ('..math.floor(player.screenX)..')')
-	ui.addInfo(love.mouse.getX()..'; '..love.mouse.getY())
-	ui.addInfo(player.beamCharge)
+	if ui.info > 0 then
+		ui.infoStr['left'] = ''
+		ui.infoStr['center'] = ''
+		ui.infoStr['right'] = ''
+		-- В инфо окно добавлять тут
+		ui.addInfo(love.timer.getFPS())
+		ui.addInfo(gamestate)
+		ui.addInfo(math.floor(player.x)..'; '..math.floor(player.y)..' ('..math.floor(player.screenX)..')')
+		ui.addInfo(love.mouse.getX()..'; '..love.mouse.getY())
+		ui.addInfo(player.beamCharge)
 
-	ui.addInfo(math.floor(world.time)..'/'..world.dayLength, 'center')
+		ui.addInfo(math.floor(world.time)..'/'..world.dayLength, 'center')
 
-	ui.addInfo('info - f1', 'right')
-	ui.addInfo('spawn guy - f2', 'right')
-	ui.addInfo('pause - f10', 'right')
-	ui.addInfo('relaunch - f12', 'right')
+		ui.addInfo('info - f1', 'right')
+		ui.addInfo('spawn guy - f2', 'right')
+		ui.addInfo('pause - f10', 'right')
+		ui.addInfo('relaunch - f12', 'right')
+	end
 
-	function ui.splash(key)
-		if key == 'space' or key == 'return' or key == 'escape' then
+	function ui.base(key)
+		if gamestate == 'splash' and key == 'space' or key == 'return' or key == 'escape' then
 			splashy.skipSplash()
 			gamestate = 'playing'
+		end
+
+		if key == 'm' then
+			if love.audio.getVolume() > 0 then
+				love.audio.setVolume(0)
+			else
+				love.audio.setVolume(1)
+			end
 		end
 	end
 
@@ -71,7 +81,7 @@ function ui.update(dt)
 	end
 
 	function ui.keypressed(key)
-		ui.splash(key)
+		ui.base(key)
 		ui.func(key)
 	end
 end

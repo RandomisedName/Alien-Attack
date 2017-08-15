@@ -16,12 +16,19 @@ function player.load()
 	player.beaming = false
 	player.beamCharge = 100
 	player.beamOff = false
+	player.beamSpeed = 50
 	player.scrolling = false
 	player.img = love.graphics.newImage("img/ufo/ufo.png")
 	player.anim = newAnimation(player.img, 175, 46, 0.35, 5)
 	player.h = player.img:getHeight()
 	player.w = player.img:getWidth() / 5
 	player.hp = 100
+
+	player.beamSound = love.audio.newSource('audio/madvoltage.ogg')
+	player.beamSound:setLooping(true)
+	player.beamSound:setVolume(0)
+	player.beamSound:setPitch(1)
+	player.beamSound:play()
 
 	player.control = {}
 	player.control['left'] = {'a', 'left'}
@@ -103,6 +110,11 @@ function player.update(dt)
 			end
 		else
 			player.beamCharge = math.min(player.beamCharge + dt*20, 100)
+		end
+		if player.beaming and player.beamCharge > 0 then
+			player.beamSound:setVolume(1)
+		else
+			player.beamSound:setVolume(0)
 		end
 
 		for n = 1, world.ammo.count, 1 do

@@ -36,6 +36,15 @@ function world.load()
 	world.bg.finalClr = {114, 173, 255}
 	world.bg.clr = {0, 0, 0}
 
+	world.music = {}
+	world.music['trashyaliens'] = love.audio.newSource('audio/trashyaliens.mp3', 'stream')
+	world.music.track = world.music['trashyaliens']
+	world.music.track:setLooping(true)
+	world.music.track:play()
+
+	world.effect = {}
+	world.effect['dayend'] = love.audio.newSource('audio/dayend.mp3')
+
 	world.guy = {}
 	world.guy.count = 0
 	world.guy.friction = 1
@@ -84,6 +93,15 @@ function world.update(dt)
 		world.offset = player.screenX-player.x
 
 		world.time = math.min(world.time + dt, world.dayLength)
+
+		if world.time > world.dayLength*0.8 then
+			world.music.track:setPitch(1+((world.time-world.dayLength*0.8)/world.dayLength*4))
+		end
+		if world.time >= world.dayLength then
+			gamestate = 'dayend'
+			world.music.track:stop()
+			world.effect['dayend']:play()
+		end
 
 		for n = 1, 3, 1 do
 			world.bg.clr[n] = world.time/world.dayLength*world.bg.finalClr[n]
@@ -187,7 +205,7 @@ function world.update(dt)
 			-- Подъем лучем
 			if math.abs(player.x - world.guy[n].x) < 20 and player.beaming then
 				world.guy[n].onGround = false
-				world.guy[n].yVel = -40
+				world.guy[n].yVel = -player.beamSpeed
 			elseif not world.guy[n].onGround then
 				world.guy[n].yVel = world.guy[n].yVel + world.guy.g*dt
 			end
@@ -219,7 +237,7 @@ function world.update(dt)
 			if math.abs(player.x - world.ammo[n].x) < 20 and player.beaming then
 				world.ammo[n].active = true
 				world.ammo[n].xVel = 0
-				world.ammo[n].yVel = -40
+				world.ammo[n].yVel = -player.beamSpeed
 				if world.ammo[n].y > world.ground.lvl then
 					 world.ammo[n].y = world.ground.lvl
 				end
