@@ -14,11 +14,14 @@ function player.load()
 	player.vMove = 0
 	player.r = 0
 	player.beaming = false
+	player.beamCharge = 100
+	player.beamOff = false
 	player.scrolling = false
 	player.img = love.graphics.newImage("img/ufo/ufo.png")
 	player.anim = newAnimation(player.img, 175, 46, 0.35, 5)
 	player.h = player.img:getHeight()
 	player.w = player.img:getWidth() / 5
+	player.hp = 100
 
 	player.control = {}
 	player.control['left'] = {'a', 'left'}
@@ -89,15 +92,36 @@ function player.update(dt)
 
 		-- Управление лучом
 		for i, key in ipairs(player.control['beam']) do
-			player.beaming = love.keyboard.isDown(key)
+			player.beaming = love.keyboard.isDown(key) and not player.beamOff
+		end
+		player.beamOff = player.beamCharge < 0
+		if player.beaming then
+			player.beamCharge = math.max(player.beamCharge - dt*20, -20)
+			player.beamOff = player.beamCharge == -20
+			if player.beamCharge <= 0 then
+				player.beaming = false
+			end
+		else
+			player.beamCharge = math.min(player.beamCharge + dt*20, 100)
+		end
+
+		for n = 1, world.ammo.count, 1 do
+			if not world.ammo[n].collided and math.abs(player.x-world.ammo[n].x) < player.w/2 and math.abs(player.y-world.ammo[n].y) < player.h/2 then
+				world.ammo[n].collided = true
+				world.ammo[n].owner = nil
+				player.hp = player.hp - 1
+
+				world.ammo[n].xVel = -world.ammo[n].xVel*0.1
+				world.ammo[n].yVel = -world.ammo[n].yVel*0.1
+			end
 		end
 
 		player.screenX = math.min(math.max(player.screenX, W*0.2), W*0.8)
 		player.scrolling = (player.screenX == W*0.2) or (player.screenX == W*0.8)
+	end
 
-		function player.keypressed(key)
+	function player.keypressed(key)
 
-		end
 	end
 end
 
@@ -109,6 +133,7 @@ function player.draw()
 	if ui.info > 1 then
 		love.graphics.setColor(205, 208, 214)
 		love.graphics.setPointSize(4)
+		love.graphics.setLineWidth(2)
 		love.graphics.points(player.screenX, player.y)
 		love.graphics.line(player.screenX-15*math.cos(player.r), player.y-15*math.sin(player.r), player.screenX+15*math.cos(player.r), player.y+15*math.sin(player.r))
 		love.graphics.setColor(255, 0, 0)
