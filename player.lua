@@ -1,8 +1,12 @@
 player = {}
 
 function player.load()
+	player.img = love.graphics.newImage("img/ufo/ufo.png")
+	player.anim = newAnimation(player.img, 175, 46, 0.35, 5)
+	player.h = player.img:getHeight()
+	player.w = player.img:getWidth() / 5
 	player.x = W/2
-	player.y = H*0.2
+	player.y = -player.h
 	player.screenX = W*0.5
 	player.xVel = 0
 	player.yVel = 0
@@ -17,10 +21,6 @@ function player.load()
 	player.beamCharge = 100
 	player.beamOff = false
 	player.scrolling = false
-	player.img = love.graphics.newImage("img/ufo/ufo.png")
-	player.anim = newAnimation(player.img, 175, 46, 0.35, 5)
-	player.h = player.img:getHeight()
-	player.w = player.img:getWidth() / 5
 	player.hp = 100
 
 	player.control = {}
@@ -34,6 +34,16 @@ function player.load()
 end
 
 function player.update(dt)
+	if gamestate == 'intro' then
+		player.y = player.y + 20*dt
+		if player.y >= player.h then
+			gamestate = 'playing'
+			for n = 1, world.guy.count, 1 do
+				world.guy[n].action = 2
+			end
+		end
+	end
+
 	if gamestate == 'playing' then
 		player.anim:update(dt)
 

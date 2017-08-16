@@ -58,13 +58,17 @@ function world.load()
 		world.guy[world.guy.count].y = world.ground.lvl
 		world.guy[world.guy.count].xVel = 0
 		world.guy[world.guy.count].yVel = 0
-		world.guy[world.guy.count].dir = 1
+		world.guy[world.guy.count].dir = 0
+		while (world.guy[world.guy.count].dir == 0) do
+			world.guy[world.guy.count].dir = love.math.random(-1, 1)
+		end
 		world.guy[world.guy.count].onGround = true
 		world.guy[world.guy.count].speed = love.math.random(50, 70)
 		world.guy[world.guy.count].strength = love.math.random(300, 400)
 		world.guy[world.guy.count].hp = 100
-		world.guy[world.guy.count].action = 2 --Действие 0 - атака, Действие 1 - бездействие, Действие 2 - бежать
-		world.guy[world.guy.count].timer = love.math.random(15, 40)/10
+		world.guy[world.guy.count].action = -1 --Действие -1 - бродить, Действие 0 - атака, Действие 1 - бездействие, Действие 2 - бежать,
+		world.guy[world.guy.count].timer = love.math.random(5, 10)
+		world.guy[world.guy.count].clicks = 0
 
 		world.guy[world.guy.count].runAnim = newAnimation(world.guy.runSheet, 23, 33, 0.23, 4)
 
@@ -81,9 +85,11 @@ end
 
 function world.update(dt)
 	if gamestate == 'playing' then
-		world.offset = player.screenX-player.x
-
 		world.time = math.min(world.time + dt, world.dayLength)
+	end
+
+	if gamestate == 'playing' or gamestate == 'menu' or gamestate == 'intro' or gamestate == 'splash' then
+		world.offset = player.screenX-player.x
 
 		for n = 1, 3, 1 do
 			world.bg.clr[n] = world.time/world.dayLength*world.bg.finalClr[n]
@@ -110,15 +116,15 @@ function world.update(dt)
 			if world.guy[n].hp > 0 then
 				world.guy[n].timer = world.guy[n].timer - dt
 				if world.guy[n].timer <= 0 then --При достижении 0 таймер обновляется и дает новое действие
-					if world.guy[n].action == 1 then
+					if world.guy[n].action == -1 then
+						world.guy[n].action = -1
+						world.guy[n].dir = -world.guy[n].dir
+						world.guy[n].timer = love.math.random(5, 10)
+					elseif world.guy[n].action == 1 then
 						world.guy[n].action = 0
-					else
-						world.guy[n].action = love.math.random(1, 2)
-					end
-
-					if world.guy[n].action == 1 then
 						world.guy[n].timer = love.math.random(5, 10)/10
 					else
+						world.guy[n].action = love.math.random(1, 2)
 						world.guy[n].timer = love.math.random(15, 40)/10
 					end
 				end
@@ -132,7 +138,11 @@ function world.update(dt)
 				end
 
 				-- Действия
-				if world.guy[n].action == 0 then -- Выполнение действия 0 (атака)
+				if world.guy[n].action == -1 then
+					world.guy[n].xVel = world.guy[n].xVel - world.guy[n].speed/2*-world.guy[n].dir*dt
+					world.guy[n].runAnim:update(dt)
+					world.guy[n].runAnim:setSpeed(0.5) -- Лучше вызывать 1 раз
+				elseif world.guy[n].action == 0 then -- Выполнение действия 0 (атака)
 					if world.guy[n].onScreen then
 						world.guy[n].action = 2
 
@@ -162,6 +172,7 @@ function world.update(dt)
 					end
 				elseif world.guy[n].action == 2 and world.guy[n].onGround then -- Выполнение действия 2 (пытаться убежать)
 					world.guy[n].runAnim:update(dt)
+					world.guy[n].runAnim:setSpeed(1) -- Лучше вызывать 1 раз
 					if world.guy[n].x > player.x then
 						world.guy[n].xVel = world.guy[n].xVel + world.guy[n].speed*dt
 						world.guy[n].dir = 1
@@ -283,8 +294,8 @@ function world.draw()
 	for n = 1, world.guy.count, 1 do
 		if 	world.guy[n].hp >  0 then
 			if world.guy[n].onGround then
-				if world.guy[n].action == 2 then
-					world.guy[n].runAnim:draw(math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/2, world.guy.h)
+				if world.guy[n].action == 2 or world.guy[n].action == -1 then
+					world.guy[n].runAnim:draw(math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, world.guy[n].dir, 1, world.guy.w/2, world.guy.h)
 				else
 					love.graphics.draw(world.guy.idleImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/2, world.guy.h)
 				end
