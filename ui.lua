@@ -32,7 +32,7 @@ function ui.update(dt)
 	ui.addInfo(gamestate)
 	ui.addInfo(math.floor(player.x)..'; '..math.floor(player.y)..' ('..math.floor(player.screenX)..')')
 	ui.addInfo(love.mouse.getX()..'; '..love.mouse.getY())
-	ui.addInfo(player.beamCharge)
+	ui.addInfo('HP: '..math.floor(player.hp)..' BEAM: '..math.floor(player.beamCharge))
 
 	ui.addInfo(math.floor(world.time)..'/'..world.dayLength, 'center')
 
