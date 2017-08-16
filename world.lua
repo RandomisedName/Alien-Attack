@@ -6,6 +6,8 @@ function world.load()
 
 	world.offset = 0
 
+	world.g = 90
+
 	world.ground = {}
 	world.ground.lvl = H-60 --Высота пола
 
@@ -39,7 +41,6 @@ function world.load()
 	world.guy = {}
 	world.guy.count = 0
 	world.guy.friction = 1
-	world.guy.g = 80
 
 	world.guy.runSheet = love.graphics.newImage("img/world/alex.png")
 	world.guy.idleImg = love.graphics.newImage("img/world/alexidle.png")
@@ -63,7 +64,7 @@ function world.load()
 		world.guy[world.guy.count].strength = love.math.random(300, 400)
 		world.guy[world.guy.count].hp = 100
 		world.guy[world.guy.count].action = 2 --Действие 0 - атака, Действие 1 - бездействие, Действие 2 - бежать
-		world.guy[world.guy.count].timer = 0
+		world.guy[world.guy.count].timer = love.math.random(15, 40)/10
 
 		world.guy[world.guy.count].runAnim = newAnimation(world.guy.runSheet, 23, 33, 0.23, 4)
 
@@ -75,7 +76,6 @@ function world.load()
 	end
 
 	world.ammo = {}
-	world.ammo.g = 200
 	world.ammo.count = 0
 end
 
@@ -99,7 +99,7 @@ function world.update(dt)
 
 			-- Проверка на столкновение с землей
 			if not world.guy[n].onGround and world.guy[n].y >= world.ground.lvl then
-				if world.guy[n].hp > 0 then
+				if world.guy[n].hp > 0 and world.guy[n].yVel > 100 then
 					world.guy[n].hp = world.guy[n].hp - world.guy[n].yVel/3
 				end
 				world.guy[n].onGround = true
@@ -189,7 +189,7 @@ function world.update(dt)
 				world.guy[n].onGround = false
 				world.guy[n].yVel = -40
 			elseif not world.guy[n].onGround then
-				world.guy[n].yVel = world.guy[n].yVel + world.guy.g*dt
+				world.guy[n].yVel = world.guy[n].yVel + world.g*dt
 			end
 		end
 
@@ -226,7 +226,7 @@ function world.update(dt)
 			end
 
 			if world.ammo[n].active then
-				world.ammo[n].yVel = world.ammo[n].yVel + world.ammo.g*dt
+				world.ammo[n].yVel = world.ammo[n].yVel + world.g*dt
 				world.ammo[n].x = world.ammo[n].x + world.ammo[n].xVel*dt
 				world.ammo[n].y = world.ammo[n].y + world.ammo[n].yVel*dt
 
@@ -284,12 +284,12 @@ function world.draw()
 		if 	world.guy[n].hp >  0 then
 			if world.guy[n].onGround then
 				if world.guy[n].action == 2 then
-					world.guy[n].runAnim:draw(math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/4, world.guy.h)
+					world.guy[n].runAnim:draw(math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/2, world.guy.h)
 				else
-					love.graphics.draw(world.guy.idleImg, math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/4, world.guy.h)
+					love.graphics.draw(world.guy.idleImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/2, world.guy.h)
 				end
 			else
-				love.graphics.draw(world.guy.idleImg, math.floor(world.guy[n].x+player.screenX-player.x),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/4, world.guy.h)
+				love.graphics.draw(world.guy.idleImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1*world.guy[n].dir, 1, world.guy.w/2, world.guy.h)
 			end
 		else
 			love.graphics.draw(world.guy.deadImg, math.floor(world.guy[n].x+world.offset),math.floor(world.guy[n].y), 0, 1, 1, world.guy.deadW/2, world.guy.deadH)
@@ -306,14 +306,16 @@ function world.draw()
 	end
 
 	if ui.info > 1 then
-		love.graphics.setColor(30, 200, 30)
-		love.graphics.line(0, world.ground.lvl, W, world.ground.lvl)
-
+		love.graphics.setLineWidth(3)
 		for n = 1, world.guy.count, 1 do
 			love.graphics.setColor(255, 0, 0)
 			love.graphics.setPointSize(2)
-			love.graphics.points(world.guy[n].x+player.screenX-player.x, world.guy[n].y)
-			love.graphics.print(n..'\n'..world.guy[n].action..'\n'..math.floor(world.guy[n].x)..'\n'..math.floor(world.guy[n].hp), world.guy[n].x+player.screenX-player.x, world.guy[n].y)
+			love.graphics.points(world.guy[n].x+world.offset, world.guy[n].y)
+			love.graphics.print(world.guy[n].action, world.guy[n].x+world.offset, world.guy[n].y)
+			love.graphics.setColor(255, 255, 255)
+			love.graphics.line(world.guy[n].x+world.offset-world.guy.w/2, world.guy[n].y - world.guy.h*1.2, world.guy[n].x+world.offset+world.guy.w/2, world.guy[n].y - world.guy.h*1.2)
+			love.graphics.setColor(255, 0, 0)
+			love.graphics.line(world.guy[n].x+world.offset-world.guy.w/2, world.guy[n].y - world.guy.h*1.2, world.guy[n].x+world.offset-world.guy.w/2+math.max(world.guy.w*world.guy[n].hp/100, 0), world.guy[n].y - world.guy.h*1.2)
 		end
 	end
 end
