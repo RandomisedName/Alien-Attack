@@ -3,6 +3,15 @@ ui = {}
 function ui.load()
 	--Сохраняем стандартный шрифт в переменную шрифта
 	ui.defaultFont = love.graphics.newFont(14)
+	ui.mainFont = love.graphics.newFont('fonts/aliens and cows.ttf', 60)
+	ui.alienFont = love.graphics.newFont('fonts/Sinescript.otf', 60)
+
+	charset = {}
+	for i = 97, 122 do table.insert(charset, string.char(i)) end
+	for i = 65,  90 do table.insert(charset, string.char(i)) end
+
+	ui.alienStr = charset[love.math.random(1, #charset)]..charset[love.math.random(1, #charset)]..charset[love.math.random(1, #charset)]
+	ui.alienStrTimer = 0
 
 	ui.info = 0
 
@@ -33,7 +42,7 @@ function ui.update(dt)
 		ui.addInfo(gamestate)
 		ui.addInfo(math.floor(player.x)..'; '..math.floor(player.y)..' ('..math.floor(player.screenX)..')')
 		ui.addInfo(love.mouse.getX()..'; '..love.mouse.getY())
-		ui.addInfo(player.beamCharge)
+	  ui.addInfo('HP: '..math.floor(player.hp)..' BEAM: '..math.floor(player.beamCharge))
 
 		ui.addInfo(math.floor(world.time)..'/'..world.dayLength, 'center')
 
@@ -43,10 +52,41 @@ function ui.update(dt)
 		ui.addInfo('relaunch - f12', 'right')
 	end
 
+	if gamestate == 'menu' then
+		ui.alienStrTimer = ui.alienStrTimer - dt
+		if ui.alienStrTimer <= 0 then
+			ui.alienStr = string.sub(ui.alienStr, 2)
+			ui.alienStr = ui.alienStr..charset[love.math.random(1, #charset)]
+			ui.alienStrTimer = 0.1
+		end
+	end
+
+	function ui.menu(x, y, mb)
+		if gamestate == 'menu' or gamestate == 'splash' then
+			if y > H*0.3 and y < H*0.3+60 and mb == 1 then
+				gamestate = 'intro'
+			end
+
+			for n = 1, world.guy.count, 1 do
+				if x > world.guy[n].x-world.guy.w/2 and x < world.guy[n].x+world.guy.w/2 and
+				y > world.guy[n].y-world.guy.h and y < world.guy[n].y then
+					world.guy[n].clicks = world.guy[n].clicks + 1
+					if world.guy[n].clicks >= 20 then
+						world.guy[n].hp = 0
+					end
+				end
+			end
+		end
+	end
+
 	function ui.base(key)
-		if gamestate == 'splash' and key == 'space' or key == 'return' or key == 'escape' then
+		if gamestate == 'menu' and key == 'return' then
+			gamestate = 'intro'
+		end
+
+		if gamestate == 'splash' and (key == 'space' or key == 'return' or key == 'escape') then
 			splashy.skipSplash()
-			gamestate = 'playing'
+			gamestate = 'menu'
 		end
 
 		if key == 'm' then
@@ -84,9 +124,24 @@ function ui.update(dt)
 		ui.base(key)
 		ui.func(key)
 	end
+
+	function ui.mousepressed(x, y, mb)
+		ui.menu(x, y, mb)
+	end
 end
 
 function ui.draw()
+	if gamestate == 'menu' then
+		love.graphics.setColor(230, 230, 255)
+		if love.mouse.getY() > H*0.3 and love.mouse.getY() < H*0.3+60 then
+			love.graphics.setFont(ui.alienFont)
+			love.graphics.printf(ui.alienStr, 0, H*0.3-20, W, 'center')
+		else
+			love.graphics.setFont(ui.mainFont)
+			love.graphics.printf('PLAY', 0, H*0.3, W, 'center')
+		end
+	end
+
 	love.graphics.setColor(255, 255, 255)
 	love.graphics.rectangle('fill', 0, 0, W*player.beamCharge/100, 2)
 
