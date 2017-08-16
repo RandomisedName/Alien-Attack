@@ -6,6 +6,14 @@ require('libs/anal')
 splashy = require('libs/splashy')
 
 function love.load()
+	--[[
+	СПИСОК ГЕЙМСТЕЙТОВ:
+	splash
+	menu
+	intro
+	playing
+	pause
+	]]
 	gamestate = 'splash'
 	opSys = love.system.getOS()
 
@@ -19,7 +27,7 @@ function love.load()
 	ui.load()
 
 	splashy.addSplash(love.graphics.newImage('img/love.png'), 1)
-	splashy.onComplete(function() gamestate = 'playing' end)
+	splashy.onComplete(function() gamestate = 'menu' end)
 end
 
 function love.update(dt)
@@ -33,7 +41,7 @@ function love.update(dt)
 	end
 
 	function love.mousepressed(x, y, mb)
-		
+		ui.mousepressed(x, y, mb)
 	end
 
 	splashy.update(dt)
