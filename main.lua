@@ -27,7 +27,9 @@ function love.load()
 	ui.load()
 
 	splashy.addSplash(love.graphics.newImage('img/love.png'), 1)
-	splashy.onComplete(function() gamestate = 'menu' end)
+  splashy.onComplete(function() gamestate = 'menu' end)
+  
+	love.graphics.setDefaultFilter('nearest', 'nearest', 1)
 end
 
 function love.update(dt)
