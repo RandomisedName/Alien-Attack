@@ -24,6 +24,7 @@ height = 400
 ```
 
 ## Условные операторы
+* Иначе с отрицаниями
 ```lua
 -- Плохо
 if not thing then
@@ -36,6 +37,18 @@ end
 if thing then
   -- ...код...
 else
+  -- ...код...
+end
+```
+* Правдивость
+```lua
+-- Плохо
+if thing == true then
+  -- ...код...
+end
+
+-- Хорошо
+if thing then
   -- ...код...
 end
 ```
@@ -70,4 +83,16 @@ PascalCase = 'meh'
 
 -- Хорошо
 camelCase = 'yay'
+```
+
+## Длина строки
+* 160 символов
+
+## Таблицы
+```lua
+-- Плохо
+boy['name'] = 'Fred'
+
+-- Хорошо
+boy.name = 'Fred'
 ```
