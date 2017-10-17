@@ -17,5 +17,4 @@
 Каждые новые сутки будут приходить новые требования к похищенным людям. Например похищать только блондинок, детей или работников ЖКХ. Последовательность условий будут случайно генироваться из заготовленных вариантов.
 
 ***
-## Nuklear
-https://github.com/keharriso/love-nuklear/wiki/Documentation
+- Nuklear https://github.com/keharriso/love-nuklear/wiki/Documentation
