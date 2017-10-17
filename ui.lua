@@ -61,6 +61,35 @@ function ui.update(dt)
 		end
 	end
 
+	-- Nuklear debug window
+	if nk.windowIsActive('debug') or firstLoop then
+		nk.frameBegin()
+		if nk.windowBegin('debug', W-310, 10, 300, H/2, 'title', 'movable', 'border', 'minimizable', 'closable', 'scrollbar') then
+			nk.layoutRow('dynamic', 30, 1)
+			if nk.button('restart') then
+				love.event.quit('restart')
+			end
+			nk.layoutRow('dynamic', 30, 2)
+			nk.label('volume:')
+			love.audio.setVolume(nk.slider(0, love.audio.getVolume(), 1, 0.01))
+
+			nk.layoutRow('dynamic', 30, 1)
+			nk.label('Set gamestate:')
+			nk.layoutRow('dynamic', 30, 2)
+			for _, value in ipairs(gamestates) do
+				if nk.selectable(value, gamestate == value) then
+					gamestate = value
+				end
+			end
+
+			nk.layoutRow('dynamic', 30, 2)
+			nk.label('time:')
+			world.time = nk.slider(0, world.time, world.dayLength, 1)
+		end
+		nk.windowEnd()
+		nk.frameEnd()
+	end
+
 	function ui.menu(x, y, mb)
 		if gamestate == 'menu' or gamestate == 'splash' then
 			if y > H*0.3 and y < H*0.3+60 and mb == 1 then
@@ -116,7 +145,7 @@ function ui.update(dt)
 			end
 		end
 		if key == 'f12' then
-			love.load()
+			love.event.quit('restart')
 		end
 	end
 

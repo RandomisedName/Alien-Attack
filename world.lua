@@ -100,9 +100,11 @@ function world.update(dt)
 	if gamestate == 'playing' or gamestate == 'menu' or gamestate == 'intro' or gamestate == 'splash' then
 		world.offset = player.screenX-player.x
 
-		if world.time > world.dayLength*0.8 then
+		-- Ускорение музыки к концу дня
+		--[[if world.time > world.dayLength*0.8 then
 			world.music.track:setPitch(1+((world.time-world.dayLength*0.8)/world.dayLength*4))
-		end
+		end]]
+
 		if world.time >= world.dayLength then
 			gamestate = 'dayend'
 			world.music.track:stop()
