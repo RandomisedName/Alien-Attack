@@ -1,6 +1,7 @@
 require('player')
 require('world')
 require('ui')
+require('style')
 
 require('libs/anal')
 splashy = require('libs/splashy')
@@ -15,7 +16,8 @@ function love.load()
 		'menu',
 		'intro',
 		'playing',
-		'pause'
+		'pause',
+		'dayend'
 	}
 	gamestate = 'splash'
 	opSys = love.system.getOS()

@@ -73,14 +73,15 @@ function ui.update(dt)
 			nk.label('volume:')
 			love.audio.setVolume(nk.slider(0, love.audio.getVolume(), 1, 0.01))
 
-			nk.layoutRow('dynamic', 30, 1)
-			nk.label('Set gamestate:')
-			nk.layoutRow('dynamic', 30, 2)
-			for _, value in ipairs(gamestates) do
-				if nk.selectable(value, gamestate == value) then
-					gamestate = value
+			nk.layoutRow('dynamic', 140, 1)
+			nk.groupBegin('Set gamestate:', 'title', 'scrollbar', 'border')
+				nk.layoutRow('dynamic', 30, 2)
+				for _, value in ipairs(gamestates) do
+					if nk.selectable(value, gamestate == value) then
+						gamestate = value
+					end
 				end
-			end
+			nk.groupEnd()
 
 			nk.layoutRow('dynamic', 30, 2)
 			nk.label('time:')
