@@ -40,8 +40,10 @@ function world.load()
 
 	world.music = {}
 	world.music['trashyaliens'] = love.audio.newSource('audio/trashyaliens.mp3', 'stream')
-	world.music.track = world.music['trashyaliens']
-	world.music.track:setLooping(true)
+	world.music['trashyaliens']:setLooping(true)
+	world.music['cyberdreamloop'] = love.audio.newSource('audio/cyberdreamloop.mp3', 'stream')
+	world.music['cyberdreamloop']:setLooping(true)
+	world.music.track = world.music['cyberdreamloop']
 	world.music.track:play()
 
 	world.effect = {}
@@ -109,6 +111,7 @@ function world.update(dt)
 			gamestate = 'dayend'
 			world.music.track:stop()
 			world.effect['dayend']:play()
+			player.beamSound:setVolume(0)
 		end
 
 		for n = 1, 3, 1 do

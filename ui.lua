@@ -95,6 +95,9 @@ function ui.update(dt)
 		if gamestate == 'menu' or gamestate == 'splash' then
 			if y > H*0.3 and y < H*0.3+60 and mb == 1 then
 				gamestate = 'intro'
+				world.music.track:stop()
+				world.music.track = world.music['trashyaliens']
+				world.music.track:play()
 			end
 
 			for n = 1, world.guy.count, 1 do
@@ -112,6 +115,9 @@ function ui.update(dt)
 	function ui.base(key)
 		if gamestate == 'menu' and key == 'return' then
 			gamestate = 'intro'
+			world.music.track:stop()
+			world.music.track = world.music['trashyaliens']
+			world.music.track:play()
 		end
 
 		if gamestate == 'splash' and (key == 'space' or key == 'return' or key == 'escape') then
